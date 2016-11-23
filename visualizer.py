@@ -1,8 +1,8 @@
-import random
 import sys
 
-from country import Country
-from map import Map
+from Model.colorer import Colorer
+from Model.country import Country
+from Model.map import Map
 
 try:
     from PyQt5 import QtGui, QtWidgets, QtCore
@@ -13,9 +13,22 @@ except Exception as e:
 
 
 class Vizualizer(QtWidgets.QWidget):
-    def __init__(self, map: Map):
+    def __init__(self, countries_map: Map):
         super(Vizualizer, self).__init__()
-        self.map = map
+        countries_map.calc_incident_countries()
+        self.colorer = Colorer(countries_map)
+        self.colorer.color_map()
+        self.map = self.colorer.countries_map
+
+        self.color_set = [QtGui.QColor(255, 0, 0),
+                          QtGui.QColor(0, 255, 0),
+                          QtGui.QColor(0, 0, 255),
+                          QtGui.QColor(255, 255, 0),
+                          QtGui.QColor(255, 0, 255),
+                          QtGui.QColor(0, 255, 255),
+                          QtGui.QColor(0, 128, 0),
+                          QtGui.QColor(0, 0, 128),
+                          QtGui.QColor(128, 0, 0)]
         self.initUI()
 
     def initUI(self):
@@ -36,14 +49,8 @@ class Vizualizer(QtWidgets.QWidget):
             self._draw_country(painter, country)
 
     def _draw_country(self, painter: QtGui.QPainter, country):
-        painter.setBrush(self._get_qt_color(country.color))
+        painter.setBrush(self.color_set[country.color])
         painter.drawPolygon(self._get_polygon(country))
-
-    @staticmethod
-    def _get_qt_color(color):
-        return QtGui.QColor(random.randint(0, 255),
-                            random.randint(0, 255),
-                            random.randint(0, 255))
 
     @staticmethod
     def _get_polygon(country: Country):
