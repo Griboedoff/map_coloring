@@ -1,8 +1,8 @@
-from Model.map import Map
+from model.map import Map
 
 
 class Colorer:
-    def __init__(self, countries_map: Map):
+    def __init__(self, countries_map: Map, ):
         self.countries_map = countries_map
         self.colors_count = 1
 
