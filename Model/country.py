@@ -12,7 +12,7 @@ class Country:
     @property
     def segments(self):
         for piece in self.country_pieces:
-            for segment in piece.segments:
+            for segment in piece.segments_set:
                 yield segment
 
     @classmethod

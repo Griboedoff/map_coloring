@@ -21,6 +21,6 @@ class Map:
             for seg in country.segments:
                 if seg not in checked:
                     for other_country in self.countries:
-                        if other_country != country and seg in country:
+                        if other_country != country and seg in other_country:
                             country.add_incident(other_country)
                 checked.add(seg)

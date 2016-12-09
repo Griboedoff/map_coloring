@@ -10,3 +10,8 @@ class NotClosedBorderError(Exception):
         super().__init__(
             "Border is not connected on number {}, segments:{} {}"
                 .format(i, s1, s2))
+
+
+class NotEnoughColorsInPalette(Exception):
+    def __init__(self, need, was):
+        super().__init__('Need {} colors, but was {}'.format(need, was))
