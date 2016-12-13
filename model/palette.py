@@ -9,14 +9,19 @@ class Palette:
         if n > len(self.colors_dict):
             raise NotEnoughColorsInPalette(n, len(self.colors_dict))
 
-        return sorted(self.colors_dict.items(), key=lambda x: x[1])[:n]
+        return sorted(self.colors_dict.items(), key=lambda x: x[1][0])[:n]
 
     def __len__(self):
         return len(self.colors_dict)
 
     @classmethod
     def from_json(cls, json):
-        return cls({Palette._parse_tuple_from_str(k): v for (k, v) in json})
+        return cls(
+            {Palette._parse_tuple_from_str(k): v for (k, v) in json.items()})
+
+    @staticmethod
+    def build_color_info(d):
+        return (d["price"], d['name'])
 
     @staticmethod
     def _parse_tuple_from_str(string):

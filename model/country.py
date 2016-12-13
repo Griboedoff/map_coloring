@@ -6,6 +6,7 @@ class Country:
     def __init__(self, country_pieces):
         self.country_pieces = country_pieces
         self.color = None
+        self.hard_set_color = False
         self.incident_countries = set()
         self.area = sum((cp.area for cp in self.country_pieces))
 

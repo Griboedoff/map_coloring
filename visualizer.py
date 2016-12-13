@@ -1,5 +1,6 @@
 import sys
 
+
 from model.colorer import Colorer
 from model.country import Country
 from model.map import Map
@@ -41,6 +42,12 @@ class Vizualizer(QtWidgets.QWidget):
         self.setGeometry(0, 0, self.map.width, self.map.height)
         self.show()
 
+    def init_pop_up_menu(self):
+        self.popMenu = QtWidgets.QMenu(self)
+        self.popMenu.addAction(QtWidgets.QAction('test0', self))
+        self.popMenu.addAction(QtWidgets.QAction('test1', self))
+        self.popMenu.addSeparator()
+        self.popMenu.addAction(QtWidgets.QAction('test2', self))
     def mousePressEvent(self, QMouseEvent):
         for (country, polygons) in self.countries_to_polygons.items():
             for polygon in polygons:
