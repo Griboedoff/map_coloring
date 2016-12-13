@@ -15,6 +15,11 @@ class Country:
             for segment in piece.segments_set:
                 yield segment
 
+    @property
+    def points(self):
+        for piece in self.country_pieces:
+            yield from piece.points
+
     @classmethod
     def from_json(cls, json):
         return cls([CountryPiece(points) for points in json])

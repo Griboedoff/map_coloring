@@ -1,5 +1,4 @@
 import sys
-from PyQt5 import Qt
 
 from model.colorer import Colorer
 from model.country import Country
@@ -39,7 +38,7 @@ class Vizualizer(QtWidgets.QWidget):
                 for country in map.countries}
 
     def initUI(self):
-        self.setGeometry(0, 0, 700, 700)
+        self.setGeometry(0, 0, self.map.width, self.map.height)
         self.show()
 
     def mousePressEvent(self, QMouseEvent):
@@ -58,14 +57,19 @@ class Vizualizer(QtWidgets.QWidget):
 
     def _highlight_country(self, painter: QtGui.QPainter):
         if self.highlighted_country:
-            painter.setBrush(QtGui.QColor(
-                *self.colorer.colors_match[self.highlighted_country.color]))
-            painter.setPen(QtGui.QPen(QtGui.QColor(255, 0, 0)))
+            painter.setBrush(QtGui.QBrush(QtGui.QColor(
+                *self.colorer.colors_match[self.highlighted_country.color])))
+            pen = QtGui.QPen(QtGui.QColor(255, 0, 0))
+            pen.setWidth(3)
+            painter.setPen(pen)
             self._draw_polygons(
                 painter, self.countries_to_polygons[self.highlighted_country])
 
     def _draw_countries(self, painter: QtGui.QPainter):
         for (country, polygons) in self.countries_to_polygons.items():
+            pen = QtGui.QPen(QtGui.QColor(0, 0, 0))
+            pen.setWidth(3)
+            painter.setPen(pen)
             painter.setBrush(QtGui.QColor(
                 *self.colorer.colors_match[country.color]))
             self._draw_polygons(painter, polygons)
