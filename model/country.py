@@ -1,3 +1,5 @@
+import json
+
 from model.exceptions import OneSegmentBorderException
 from model.segment import Segment
 
@@ -9,6 +11,10 @@ class Country:
         self.hard_set_color = False
         self.incident_countries = set()
         self.area = sum((cp.area for cp in self.country_pieces))
+
+    @property
+    def hard_colored(self):
+        return self.hard_set_color
 
     @property
     def segments(self):
@@ -25,22 +31,19 @@ class Country:
     def from_json(cls, json):
         return cls([CountryPiece(points) for points in json])
 
+    def set_color(self, color):
+        self.color = color
+        self.hard_set_color = True
+
     def is_neighbour(self, country):
         return country in self.incident_countries
-
-    def has_one_border_with(self, border_segment):
-        for piece in self.country_pieces:
-            if border_segment in piece.segments:
-                return True
-        return False
 
     def add_incident(self, other_country):
         self.incident_countries.add(other_country)
         other_country.incident_countries.add(self)
 
     def to_json(self):
-        return '[{}]'.format(', '.join(map(lambda x: x.to_json,
-                                           self.country_pieces)))
+        return json.dumps(map(lambda x: x.to_json, self.country_pieces))
 
     def __contains__(self, item):
         for piece in self.country_pieces:
@@ -49,7 +52,8 @@ class Country:
         return False
 
     def __str__(self):
-        return '\n'.join(map(str, self.country_pieces))
+        return '{} {}'.format(self.color,
+                              '\n'.join(map(str, self.country_pieces)))
 
 
 class CountryPiece:
@@ -62,15 +66,13 @@ class CountryPiece:
         self.area = self._calc_area()
 
     def to_json(self):
-        return '[{}]'.format(', '.join(map(lambda x: '{}{}'.format(*x),
-                                           self.points)))
+        return json.dumps(self.points)
 
     def _calc_area(self):
         area = 0
-        j = len(self.points) - 1
         for i in range(len(self.points)):
-            area += ((self.points[j][1] + self.points[i][1]) *
-                     (self.points[j][0] - self.points[i][0]))
+            area += ((self.points[i - 1][0] * self.points[i][1]) -
+                     (self.points[i - 1][1] * self.points[i][0]))
         return abs(area / 2)
 
     def __str__(self):

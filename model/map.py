@@ -13,27 +13,23 @@ class Map:
     @classmethod
     def from_file(cls, file, encoding):
         with open(file, 'r', encoding=encoding) as f:
-            parsed_json = json.loads(f.read(), encoding=encoding)
+            parsed_json = json.load(f, encoding=encoding)
         return cls([Country.from_json(segments) for segments in parsed_json])
 
     def calc_incident_countries(self):
         checked = set()
         for country in self.countries:
-            for seg in country.segments:
-                if seg not in checked:
-                    for other_country in self.countries:
-                        if other_country != country and seg in other_country:
-                            country.add_incident(other_country)
+            for seg in filter(lambda s: s not in checked, country.segments):
+                for other_country in filter(
+                        lambda c: c != country and seg in c, self.countries):
+                    country.add_incident(other_country)
                 checked.add(seg)
 
     def set_sizes(self):
         max_w = 0
         max_h = 0
         for country in self.countries:
-            for point in country.points:
-                if point[0] > max_w:
-                    max_w = point[0]
-                if point[1] > max_h:
-                    max_h = point[1]
+            max_w = max(max_w, max(x for (x, _) in country.points))
+            max_h = max(max_h, max(y for (_, y) in country.points))
         self.width = max_w
         self.height = max_h
