@@ -12,12 +12,13 @@ except Exception as e:
     sys.exit(1)
 
 
-class Vizualizer(QtWidgets.QWidget):
+class Visualizer(QtWidgets.QWidget):
     def __init__(self, countries_map: Map, palette):
-        super(Vizualizer, self).__init__()
+        super(Visualizer, self).__init__()
         countries_map.calc_incident_countries()
         self.colorer = Colorer(countries_map, palette)
-        self.update_map()
+        self.countries_to_polygons = self.update_map()
+        self.reset_action = None
         self.highlighted_country = None
         self.initUI()
 
@@ -27,8 +28,7 @@ class Vizualizer(QtWidgets.QWidget):
 
     def update_map(self):
         self.colorer.color_map()
-        self.countries_to_polygons = self._build_polygon_map(
-            self.countries_map)
+        return self._build_polygon_map(self.countries_map)
 
     def initUI(self):
         self.setGeometry(0, 0,
@@ -119,10 +119,10 @@ class Vizualizer(QtWidgets.QWidget):
 
     @staticmethod
     def _build_polygon_map(countries_map):
-        return {country: Vizualizer._get_polygons(country)
+        return {country: Visualizer._get_polygons(country)
                 for country in countries_map.countries}
 
     @staticmethod
     def _get_polygons(country: Country):
         return [QtGui.QPolygon([QtCore.QPoint(*x) for x in piece.points])
-                for piece in country.country_pieces]
+                for piece in country.pieces]

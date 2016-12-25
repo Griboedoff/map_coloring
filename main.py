@@ -3,7 +3,8 @@ import sys
 
 from PyQt5 import QtWidgets
 
-from GUI.visualizer import Vizualizer
+from GUI.visualizer import Visualizer
+from editor.editor_window import EditorWindow
 from model.map import Map
 from model.palette import Palette
 
@@ -16,17 +17,20 @@ def create_parser():
                         help='Map file')
     parser.add_argument("-p", '--palette', type=str, default='palette.json',
                         help='Palette config file')
-    parser.add_argument('-e', '--encoding', type=str, default='utf8',
+    parser.add_argument('--encoding', type=str, default='utf8',
                         help='Encoding for files')
+    parser.add_argument('-e', '--editor', action='store_true',
+                        help='Run map editor')
     return parser.parse_args()
 
 
 if __name__ == '__main__':
     parser = create_parser()
     app = QtWidgets.QApplication(sys.argv)
-    map1 = Map.from_file(parser.map, parser.encoding)
-    # map1 = Map.from_file('maps/test_map.json', 'utf8')
-
-    viz = Vizualizer(map1, Palette.from_json(parser.palette))
+    if parser.editor:
+        editor = EditorWindow()
+    else:
+        viz = Visualizer(Map.from_file(parser.map, parser.encoding),
+                         Palette.from_json(parser.palette))
 
     sys.exit(app.exec_())

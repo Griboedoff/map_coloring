@@ -6,11 +6,15 @@ from model.segment import Segment
 
 class Country:
     def __init__(self, country_pieces):
-        self.country_pieces = country_pieces
+        self._country_pieces = country_pieces
         self.color = None
         self.hard_set_color = False
         self.incident_countries = set()
-        self.area = sum((cp.area for cp in self.country_pieces))
+        self.area = self.calc_area()
+
+    @property
+    def pieces(self):
+        yield from self._country_pieces
 
     @property
     def hard_colored(self):
@@ -18,18 +22,25 @@ class Country:
 
     @property
     def segments(self):
-        for piece in self.country_pieces:
+        for piece in self._country_pieces:
             for segment in piece.segments_set:
                 yield segment
 
     @property
     def points(self):
-        for piece in self.country_pieces:
+        for piece in self._country_pieces:
             yield from piece.points
 
     @classmethod
-    def from_json(cls, json):
-        return cls([CountryPiece(points) for points in json])
+    def from_json(cls, json_obj):
+        return cls([CountryPiece(points) for points in json_obj])
+
+    def add_piece(self, piece):
+        self._country_pieces.append(piece)
+        self.area = self.calc_area()
+
+    def calc_area(self):
+        return sum((cp.area for cp in self._country_pieces))
 
     def set_color(self, color):
         self.color = color
@@ -43,17 +54,17 @@ class Country:
         other_country.incident_countries.add(self)
 
     def to_json(self):
-        return json.dumps(map(lambda x: x.to_json, self.country_pieces))
+        return json.dumps([p.to_json() for p in self._country_pieces])
 
     def __contains__(self, item):
-        for piece in self.country_pieces:
+        for piece in self._country_pieces:
             if item in piece:
                 return True
         return False
 
     def __str__(self):
         return '{} {}'.format(self.color,
-                              '\n'.join(map(str, self.country_pieces)))
+                              '\n'.join(map(str, self._country_pieces)))
 
 
 class CountryPiece:

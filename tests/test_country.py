@@ -20,7 +20,7 @@ class TestCountry(TestCase):
     def test_hard_colored(self):
         self.c1.set_color(1)
         self.assertTrue(self.c1.hard_colored)
-        self.assertEquals(self.c1.color, 1)
+        self.assertEqual(self.c1.color, 1)
 
 if __name__ == '__main__':
     main()
