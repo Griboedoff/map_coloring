@@ -51,7 +51,7 @@ class EditorWidget(QtWidgets.QWidget):
 
     def save(self):
         self.add_country()
-        name = "./maps/map_" + str(uuid.uuid4()) + ".json"
+        name = "./maps/map_{}.json".format(str(uuid.uuid4()))
         new_map = Map(self.countries)
         with open(name, 'w') as f:
             f.write(new_map.to_json())

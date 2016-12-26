@@ -20,7 +20,7 @@ class Map:
         return self.size[1]
 
     @classmethod
-    def from_file(cls, file, encoding):
+    def from_file(cls, file, encoding='utf8'):
         with open(file, 'r', encoding=encoding) as f:
             parsed_json = json.load(f, encoding=encoding)
         return cls([Country.from_json(segments) for segments in parsed_json])

@@ -8,7 +8,7 @@ class Country:
     def __init__(self, country_pieces):
         self._country_pieces = country_pieces
         self.color = None
-        self.hard_set_color = False
+        self._hard_set_color = False
         self.incident_countries = set()
         self.area = self.calc_area()
 
@@ -18,7 +18,7 @@ class Country:
 
     @property
     def hard_colored(self):
-        return self.hard_set_color
+        return self._hard_set_color
 
     @property
     def segments(self):
@@ -44,7 +44,7 @@ class Country:
 
     def set_color(self, color):
         self.color = color
-        self.hard_set_color = True
+        self._hard_set_color = True
 
     def is_neighbour(self, country):
         return country in self.incident_countries
@@ -52,9 +52,6 @@ class Country:
     def add_incident(self, other_country):
         self.incident_countries.add(other_country)
         other_country.incident_countries.add(self)
-
-    def to_json(self):
-        return json.dumps([p.to_json() for p in self._country_pieces])
 
     def __contains__(self, item):
         for piece in self._country_pieces:
@@ -75,9 +72,6 @@ class CountryPiece:
         self.segments_set = {Segment(points[i], points[(i + 1) % len(points)])
                              for i in range(len(points))}
         self.area = self._calc_area()
-
-    def to_json(self):
-        return json.dumps(self.points)
 
     def _calc_area(self):
         area = 0

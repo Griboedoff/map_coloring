@@ -30,7 +30,11 @@ if __name__ == '__main__':
     if parser.editor:
         editor = EditorWindow()
     else:
-        viz = Visualizer(Map.from_file(parser.map, parser.encoding),
-                         Palette.from_json(parser.palette))
+        try:
+            loaded_map = Map.from_file(parser.map, parser.encoding)
+        except IOError as e:
+            print("error loading {} file\n{}".format(parser.map, e))
+            exit(1)
+        viz = Visualizer(loaded_map, Palette.from_json(parser.palette))
 
     sys.exit(app.exec_())

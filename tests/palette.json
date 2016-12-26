@@ -1,0 +1,38 @@
+{
+  "255 0 0": {
+    "price": 1,
+    "name": "red"
+  },
+  "0 255 0": {
+    "price": 2,
+    "name": "green"
+  },
+  "0 0 255": {
+    "price": 3,
+    "name": "blue"
+  },
+  "255 255 0": {
+    "price": 4,
+    "name": "yellow"
+  },
+  "255 0 255": {
+    "price": 5,
+    "name": "magenta"
+  },
+  "0 255 255": {
+    "price": 6,
+    "name": "cyan"
+  },
+  "0 128 0": {
+    "price": 7,
+    "name": "dark green"
+  },
+  "0 0 128": {
+    "price": 8,
+    "name": "dark blue"
+  },
+  "128 0 0": {
+    "price": 9,
+    "name": "dark red"
+  }
+}
